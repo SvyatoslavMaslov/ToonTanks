@@ -36,11 +36,12 @@ void AProjectile::BeginPlay()
 	}
 }
 
-// Called every frame
-void AProjectile::Tick(float DeltaTime)
+void AProjectile::Launch(float Speed)
 {
-	Super::Tick(DeltaTime);
-
+	ProjectileMovementComponent->InitialSpeed = Speed;
+	ProjectileMovementComponent->MaxSpeed = Speed;
+	ProjectileMovementComponent->SetVelocityInLocalSpace(FVector::ForwardVector * Speed);
+	ProjectileMovementComponent->Activate();
 }
 
 void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
@@ -62,6 +63,13 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
 		UGameplayStatics::ApplyDamage(OtherActor, Damage, OwnerInstigator, this, DamageTypeClass);
 	}
 
+	HandleHit();
+
+	Destroy();
+}
+
+void AProjectile::HandleHit()
+{
 	if (HitParticles)
 	{
 		UGameplayStatics::SpawnEmitterAtLocation(this, HitParticles, GetActorLocation(), GetActorRotation());
@@ -76,6 +84,4 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
 	{
 		GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(HitCameraShakeClass);
 	}
-
-	Destroy();
 }

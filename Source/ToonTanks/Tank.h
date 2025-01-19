@@ -13,9 +13,8 @@ UCLASS()
 class TOONTANKS_API ATank : public ABasePawn
 {
 	GENERATED_BODY()
-
+public:
 	ATank();
-
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -25,13 +24,20 @@ class TOONTANKS_API ATank : public ABasePawn
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-public:
 	void HandleDestruction();
 
 	APlayerController* GetTankPlayerController() const { return TankPlayerController; }
 
 	bool IsDead = false;
 
+	UFUNCTION(BlueprintPure)
+	float GetStrikeAmount();
+
+	void DecreaseStrikeAmount();
+	bool HasStrikes();
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	class UHealthComponent* HealthComponent;
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* SpringArm;
@@ -44,6 +50,9 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Movement")
 	float TurnRate = 45.f;
+
+	UPROPERTY(EditAnywhere, Category = "Support", meta = (AllowPrivateAccess = "true"))
+	float StrikeAmount = 2;
 
 	void Move(float Value);
 	void Turn(float Value);

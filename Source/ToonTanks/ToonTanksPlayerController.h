@@ -16,4 +16,11 @@ class TOONTANKS_API AToonTanksPlayerController : public APlayerController
 
 public:
 	void SetPlayerEnabledState(bool bPlayerEnabled);
+
+protected:
+	virtual void BeginPlay() override;
+
+private:
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	TSubclassOf<class UUserWidget> HUD;
 };

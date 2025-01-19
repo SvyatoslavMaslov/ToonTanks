@@ -15,23 +15,13 @@ public:
 	// Sets default values for this actor's properties
 	AProjectile();
 
+	void Launch(float Speed);
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-private:
-	UPROPERTY(EditDefaultsOnly, Category = "Combat")
-	UStaticMeshComponent* ProjectileMesh;
-
-	UPROPERTY(VisibleAnywhere, Category = "Movement")
-	class UProjectileMovementComponent* ProjectileMovementComponent;
-
 	UFUNCTION()
-	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
+	virtual void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
 
 	UPROPERTY(EditAnywhere)
 	float Damage = 50.f;
@@ -50,4 +40,12 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TSubclassOf<class UCameraShakeBase> HitCameraShakeClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	UStaticMeshComponent* ProjectileMesh;
+
+	void HandleHit();
+private:
+	UPROPERTY(VisibleAnywhere, Category = "Movement")
+	class UProjectileMovementComponent* ProjectileMovementComponent;
 };

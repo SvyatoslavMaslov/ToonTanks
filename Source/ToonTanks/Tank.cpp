@@ -6,6 +6,9 @@
 #include "Components/InputComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "DrawDebugHelpers.h"
+#include "Math/UnrealMathUtility.h"
+#include "Projectile.h"
+#include "HealthComponent.h"
 
 ATank::ATank() {
 	PrimaryActorTick.bCanEverTick = true;
@@ -15,6 +18,8 @@ ATank::ATank() {
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);
+
+	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("Health Component"));
 }
 
 // Called when the game starts or when spawned
@@ -31,6 +36,24 @@ void ATank::HandleDestruction()
 	SetActorHiddenInGame(true);
 	SetActorTickEnabled(false);
 	IsDead = true;
+}
+
+float ATank::GetStrikeAmount()
+{
+	return StrikeAmount;
+}
+
+void ATank::DecreaseStrikeAmount()
+{
+	if (HasStrikes())
+	{
+		--StrikeAmount;
+	}
+}
+
+bool ATank::HasStrikes()
+{
+	return StrikeAmount > 0;
 }
 
 // Called every frame
